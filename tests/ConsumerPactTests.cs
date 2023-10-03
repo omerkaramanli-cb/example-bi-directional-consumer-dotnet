@@ -133,7 +133,7 @@ namespace tests
                 .WithHeader("Content-Type", "application/json; charset=utf-8")
                 .WithJsonBody(new
                 {
-                    id = Match.Type(-10),
+                    id = Match.Type(3),
                     name = Match.Type("burger"),
                     type = Match.Type("food")
                 });
