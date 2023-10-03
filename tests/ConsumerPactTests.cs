@@ -127,7 +127,7 @@ namespace tests
         {
             pact
                 .UponReceiving("a request to retrieve a negative product id that does not exist")
-                .WithRequest(HttpMethod.Get, "/Products/-10")
+                .WithRequest(HttpMethod.Get, "/Products/3")
                 .WillRespond()
                 .WithStatus(System.Net.HttpStatusCode.OK)
                 .WithHeader("Content-Type", "application/json; charset=utf-8")
@@ -142,7 +142,7 @@ namespace tests
             await pact.VerifyAsync(async ctx =>
             {
                 var client = new ProductClient();
-                var product = await client.GetProduct(ctx.MockServerUri.AbsoluteUri, -10, null);
+                var product = await client.GetProduct(ctx.MockServerUri.AbsoluteUri, 3, null);
 
                 //Assert
                 Assert.IsType<int>(product.id);
