@@ -129,18 +129,25 @@ namespace tests
                 .UponReceiving("a request to retrieve a negative product id that does not exist")
                 .WithRequest(HttpMethod.Get, "/Products/-10")
                 .WillRespond()
-                .WithStatus(System.Net.HttpStatusCode.NotFound)
-                .WithHeader("Content-Type", "application/json; charset=utf-8");
-
+                .WithStatus(System.Net.HttpStatusCode.OK)
+                .WithHeader("Content-Type", "application/json; charset=utf-8")
+                .WithJsonBody(new
+                {
+                    id = Match.Type(-10),
+                    name = Match.Type("burger"),
+                    type = Match.Type("food")
+                });
 
             //Act
             await pact.VerifyAsync(async ctx =>
             {
                 var client = new ProductClient();
+                var product = await client.GetProduct(ctx.MockServerUri.AbsoluteUri, 27, null);
 
                 //Assert
-                var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetProduct(ctx.MockServerUri.AbsoluteUri, -10, null));
-                Assert.Equal("Response status code does not indicate success: 404 (Not Found).", ex.Message);
+                Assert.IsType<int>(product.id);
+                Assert.IsType<string>(product.name);
+                Assert.IsType<string>(product.type);
             });
         }
     }
