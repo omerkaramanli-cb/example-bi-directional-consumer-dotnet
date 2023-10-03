@@ -123,7 +123,7 @@ namespace tests
         }
 
         [Fact]
-        public async Task GetProduct_WhenCalledWithInvalidID_ReturnsError_Test()
+        public async Task GetProduct_WhenCalledWithInvalidID_DoesntReturnError_Test()
         {
             pact
                 .UponReceiving("a request to retrieve a negative product id that does not exist")
@@ -142,7 +142,7 @@ namespace tests
             await pact.VerifyAsync(async ctx =>
             {
                 var client = new ProductClient();
-                var product = await client.GetProduct(ctx.MockServerUri.AbsoluteUri, 27, null);
+                var product = await client.GetProduct(ctx.MockServerUri.AbsoluteUri, -10, null);
 
                 //Assert
                 Assert.IsType<int>(product.id);
